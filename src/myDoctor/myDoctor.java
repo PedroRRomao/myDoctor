@@ -5,7 +5,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.nio.file.Files;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -35,7 +34,7 @@ public class myDoctor {
 		System.out.println("Inserir opcoes na consola:");
 		Map<String, String> option = userOptions.validate(scan.nextLine());
 		*/
-		Map<String, String> option = userOptions.validate("-u miguel -a 12345:123 -p 1234 -md");
+		Map<String, String> param = userOptions.validate("-u miguel -a 12345:123 -p 1234 -md");
 		
 		String fileName = "pd.pdf"; //variavél temporária, conteúdo vai ser obtido pelo input do cliente no futuro
 		
@@ -43,8 +42,8 @@ public class myDoctor {
         byte[] content = Files.readAllBytes(file.toPath());
         long fileBytes = file.length();
         
-		outStream.writeObject(id);
-		outStream.writeObject(password);
+		outStream.writeObject(param.get("u"));
+		outStream.writeObject(param.get("p"));
         outStream.writeObject(fileBytes);
         outStream.writeObject(fileName);
         outStream.writeObject(content);
