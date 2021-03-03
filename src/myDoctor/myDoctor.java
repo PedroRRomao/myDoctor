@@ -1,17 +1,15 @@
 package myDoctor;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.util.Map;
 import java.util.Scanner;
 
 public class myDoctor {
-	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
+	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		// 1- criar o socket
 
@@ -23,27 +21,33 @@ public class myDoctor {
 		ObjectOutputStream outStream = new ObjectOutputStream(echoSocket.getOutputStream());
 		
 		//escrever no socket duas strings
-		String inputU1 = "Security";
-		String inputU2 = "Verify";
-		
-		outStream.writeObject(inputU1);
-		outStream.writeObject(inputU2);
-		
-		
-		
-		//ler do socket um boolean
-		
-		Boolean fromServer = (Boolean) inStream.readObject();
-		
+		String id = "Security";
+		String password = "Verify";
 		
 		// print line do boolean para saber o que aconteceu
 		System.out.println("Cliente inicializado!");
 		
-		Scanner scan = new Scanner(System.in);  // Create a Scanner object
-		System.out.println("Insert options in the console:");
-
-	    String option = scan.nextLine();  // Read user input
 		
+		//Recebe os comandos
+		/*
+		Scanner scan = new Scanner(System.in); 
+		System.out.println("Inserir opcoes na consola:");
+		Map<String, String> option = userOptions.validate(scan.nextLine());
+		*/
+		Map<String, String> param = userOptions.validate("-u miguel -a 12345:123 -p 1234 -md");
+		
+		String fileName = "pd.pdf"; //variavél temporária, conteúdo vai ser obtido pelo input do cliente no futuro
+		
+        File file = new File("clientDirectory/" + fileName);
+        byte[] content = Files.readAllBytes(file.toPath());
+        long fileBytes = file.length();
+        
+		outStream.writeObject(param.get("u"));
+		outStream.writeObject(param.get("p"));
+        outStream.writeObject(fileBytes);
+        outStream.writeObject(fileName);
+        outStream.writeObject(content);
+
 		//Close streams
 		outStream.close();
 		inStream.close();

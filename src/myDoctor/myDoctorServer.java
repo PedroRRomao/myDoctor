@@ -1,17 +1,13 @@
 package myDoctor;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
+import java.nio.file.Files;
 import java.util.Scanner;
 
 
@@ -76,18 +72,23 @@ public class myDoctorServer {
 				
 				ObjectOutputStream outStream = new ObjectOutputStream(socket.getOutputStream());
 				ObjectInputStream inStream = new ObjectInputStream(socket.getInputStream());
-
-				String user = null;
-				String passwd = null;
 			
 				try {
-					user = (String)inStream.readObject();
-					passwd = (String)inStream.readObject();
+					String user = (String)inStream.readObject(); //recebe user
+					String passwd = (String)inStream.readObject(); //recebe password
+					long fileBytes = (long)(inStream.readObject()); //recebe tamanho do ficheiro
+					String fileName = (String)inStream.readObject(); //recebe o nome do ficheiro
+					
+					//o processo abaixo de gravação do ficheiro poderá ser simplificado
+					byte[] content = (byte[]) inStream.readObject(); //recebe o ficheiro
+					File fileReceived = new File ("serverDirectory/" + fileName); //cria o namespace
+					Files.write(fileReceived.toPath(), content); //grava o conteudo do ficheiro "content" para o namespace
 					System.out.println("thread: depois de receber a password e o user");
+					System.out.println("Tamanho do ficheiro recebido: "+ fileBytes + " bytes");
+					
 				}catch (ClassNotFoundException e1) {
 					e1.printStackTrace();
 				}
-
 
 				outStream.close();
 				inStream.close();
