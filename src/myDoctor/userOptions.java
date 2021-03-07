@@ -1,6 +1,10 @@
 package myDoctor;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +52,7 @@ public class userOptions {
 		catch (NullPointerException e){
 			throw new Exception("Erro na password introduzida");	
 		}
-		
+
 		//validação da listagem de documentos do utente -md
 		if(params.containsKey("md")) {
 			
@@ -65,7 +69,31 @@ public class userOptions {
 				}
 			}
 		}
-	
+		
+		// Criação de utilizadores
+		if(params.containsKey("c")) {
+			
+			if(params.get("u").compareTo("1") == 0) {
+				
+				try(FileWriter fw = new FileWriter("serverDirectory/def_not_passwords.txt", true);
+					    BufferedWriter bw = new BufferedWriter(fw);
+					    PrintWriter out = new PrintWriter(bw))
+					{
+					    out.println(temp2[1]+";"+temp2[2]+";"+temp2[3]+";"+temp2[4]);
+					    System.out.println("O utilizador "+temp2[2]+" com o ID "+ temp2[1] + " vai ser criado.");
+					    System.out.println("Utilizador "+ temp2[2] + " foi criado!");
+					    bw.close();
+					    out.close();
+					} catch (IOException e) {
+					    //exception handling left as an exercise for the reader
+					}
+			}
+			
+			else {
+				System.out.println("Apenas admins podem criar utilizadores.");
+			}
+			
+		}
 		return params;	
 	}
 }
