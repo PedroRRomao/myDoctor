@@ -28,10 +28,12 @@ public class userOptions {
 		//validação do utilizador
 		try {
 			v = params.get("u");
+			
 		}
 		catch (NullPointerException e){
-			throw new Exception("Erro no ID introduzido");	
+			throw new Exception("Não foi introduzido username");	
 		}
+		
 		
 		//validação do endereço
 		try {

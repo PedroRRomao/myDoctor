@@ -12,8 +12,11 @@ import java.util.Scanner;
 
 
 public class myDoctorServer {
-	public static void main(String[] args) {
+	
+	public static void main(String[] args) throws IOException {
 		System.out.println("servidor: main");
+		serverOptions.populateUserMap();//cria o mapa na classe serverOptions que contém todos os users
+		serverOptions.createUser("ricardo","ricardopw","patient"); //teste de criação de user
 		myDoctorServer server = new myDoctorServer();
 		server.startServer();
 	}
@@ -63,7 +66,7 @@ public class myDoctorServer {
 				    System.out.println("Creating Admin. Enter password:");
 
 				    String admin_passwrd = scan.nextLine();  // Read user input
-					myWriter.write("1; Administrador_base;"+admin_passwrd+";admin");
+					myWriter.write("1;Administrador_base;"+admin_passwrd+";admin");
 					myWriter.close();
 					System.out.println("File created: " + file.getName());
 				} else {
