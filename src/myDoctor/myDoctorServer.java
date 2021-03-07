@@ -83,7 +83,7 @@ public class myDoctorServer {
 					byte[] content = (byte[]) inStream.readObject(); //recebe o ficheiro
 					File fileReceived = new File ("serverDirectory/" + fileName); //cria o namespace
 					Files.write(fileReceived.toPath(), content); //grava o conteudo do ficheiro "content" para o namespace
-					System.out.println("thread: depois de receber a password e o user");
+					System.out.println("thread: depois de receber a password e o user: " + user);
 					System.out.println("Tamanho do ficheiro recebido: "+ fileBytes + " bytes");
 					
 				}catch (ClassNotFoundException e1) {

@@ -20,10 +20,6 @@ public class myDoctor {
 		ObjectInputStream inStream = new ObjectInputStream(echoSocket.getInputStream());
 		ObjectOutputStream outStream = new ObjectOutputStream(echoSocket.getOutputStream());
 		
-		//escrever no socket duas strings
-		String id = "Security";
-		String password = "Verify";
-		
 		// print line do boolean para saber o que aconteceu
 		System.out.println("Cliente inicializado!");
 		
@@ -34,7 +30,7 @@ public class myDoctor {
 		System.out.println("Inserir opcoes na consola:");
 		Map<String, String> option = userOptions.validate(scan.nextLine());
 		*/
-		Map<String, String> param = userOptions.validate("-u miguel -a 12345:123 -p 1234 -md");
+		Map<String, String> param = userOptions.validate("-u 1 -a 12345:123 -p admin1 -c 201 Jose thepwd utente");
 		
 		String fileName = "pd.pdf"; //variavél temporária, conteúdo vai ser obtido pelo input do cliente no futuro
 		
