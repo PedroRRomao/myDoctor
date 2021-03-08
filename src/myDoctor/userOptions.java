@@ -13,7 +13,7 @@ public class userOptions {
 		String[] temp = null; //String que guarda o split em "-" da string de comandos original
 		temp = a.split("-",0);	
 		String temp2[] = null; //String auxiliar no ciclo que separa os comandos e os valores
-		
+	
 		for(int i = 1; i<temp.length;i++) {
 			temp2 = temp[i].split(" ",0);
 			 try {
@@ -54,18 +54,17 @@ public class userOptions {
 		//validação da listagem de documentos do utente -md
 		if(params.containsKey("md")) {
 			
-
-		}
-		
-		if(params.containsKey("mx")) {
+			File file = new File("clientDirectory");
+			String[] l = file.list();
+			System.out.println("Ficheiros do utente: " + params.get("u"));
 			
-
-		}
-		
-		if(params.containsKey("c")) {
-			
-			if(params.get("u").compareTo("1") != 0) {
-				System.out.println("Apenas admins podem criar utilizadores.");
+			if(l == null) {
+				System.out.println("Nenhum ficheiro na directoria");
+			}
+			else {
+				for(int i=0; i<l.length ;i++) {
+					System.out.println(l[i]);
+				}
 			}
 		}
 	

@@ -13,13 +13,12 @@ import java.util.Scanner;
 
 public class myDoctorServer {
 	
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		System.out.println("servidor: main");
 		serverOptions.populateUserMap();//cria o mapa na classe serverOptions que contém todos os users
-		//serverOptions.createUser(231,"ricardo","ricardopw","utente");
+		serverOptions.createUser("ricardo","ricardopw","patient"); //teste de criação de user
 		myDoctorServer server = new myDoctorServer();
 		server.startServer();
-		
 	}
 
 	public void startServer (){
