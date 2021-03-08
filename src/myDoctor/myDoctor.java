@@ -25,6 +25,7 @@ public class myDoctor {
 		//Recebe os comandos
 		Scanner scan = new Scanner(System.in); 
 		System.out.println("Inserir opcoes na consola:");
+		
 		Map<String, String> param = userOptions.validate(scan.nextLine()); //mapa com os vários comandos e seus argumentos 
 		String lastCommand = userOptions.getLastCommand();				  //indicativo do ultimo comando colocado md, mx etc
 		
@@ -40,7 +41,6 @@ public class myDoctor {
 		outStream.writeObject(param.get("p"));
 		outStream.writeObject(lastCommand);           	//o comando
 		outStream.writeObject(param.get(lastCommand)); //os parametros do comando
-        outStream.writeObject(fileBytes);
         outStream.writeObject(fileName);
         outStream.writeObject(content);
         

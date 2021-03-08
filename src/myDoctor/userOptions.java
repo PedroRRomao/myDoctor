@@ -30,8 +30,7 @@ public class userOptions {
 			}
 		}
 
-		
-		//validação da listagem de documentos do utente -md
+		//MOVER PARA SERVER	
 		if(params.containsKey("md")) {
 			
 			File file = new File("clientDirectory");

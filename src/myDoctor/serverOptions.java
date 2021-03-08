@@ -136,7 +136,13 @@ public static void createUser(Integer id , String username, String password,Stri
  public static String[] reply(Integer id,String password,String comand,String args) throws Exception {
 	 String[] rply = new String[2];
 	 rply[0]=login(id,password);
-	 rply[1]=checkCmd(id,password,comand,args);
+	 
+	 if(rply[0].equals("Invalid password") || rply[0].equals("User doesnt exist")){
+		 rply[1]="Nao foram executados comandos";
+	 }
+	 else {
+		 rply[1]=checkCmd(id,password,comand,args);
+	 }
 	 return rply;
  }
 }

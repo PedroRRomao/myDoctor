@@ -85,7 +85,6 @@ public class myDoctorServer {
 																	 //terá de ser tratado consoante o comando recebido acima
 																	//ex do comando -c: 12 miguel pw123 medico
 					
-					long fileBytes = (long)(inStream.readObject()); //recebe tamanho do ficheiro
 					String fileName = (String)inStream.readObject(); //recebe o nome do ficheiro
 					Integer treatedId = Integer.parseInt(id.trim());
 					String treatedpasswd = passwd.trim();
@@ -96,7 +95,6 @@ public class myDoctorServer {
 					File fileReceived = new File ("serverDirectory/" + fileName); //cria o namespace
 					Files.write(fileReceived.toPath(), content); //grava o conteudo do ficheiro "content" para o namespace
 					System.out.println("thread: depois de receber a password e o user");
-					System.out.println("Tamanho do ficheiro recebido: "+ fileBytes + " bytes");
 					System.out.println("User: "+id+" Password: "+passwd+" cmd: "+cmd+" cmdParam: " +cmdParam);
 					
 					outStream.writeObject(checks[0]);
