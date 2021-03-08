@@ -13,10 +13,10 @@ import java.util.Scanner;
 
 public class myDoctorServer {
 	
-	public static void main(String[] args) throws IOException {
-		System.out.println("servidor: main");
-		serverOptions.populateUserMap();//cria o mapa na classe serverOptions que contém todos os users
-		serverOptions.createUser("ricardo","ricardopw","patient"); //teste de criação de user
+	public static void main(String[] args) throws Exception {
+		System.out.println("servidor: main");//cria o mapa na classe serverOptions que contém todos os users
+		serverOptions.populateUserMap();
+		//serverOptions.createUser(231,"ricardo","ricardopw","utente"); //teste de criação de user
 		myDoctorServer server = new myDoctorServer();
 		server.startServer();
 	}
@@ -77,10 +77,19 @@ public class myDoctorServer {
 				ObjectInputStream inStream = new ObjectInputStream(socket.getInputStream());
 			
 				try {
-					String user = (String)inStream.readObject(); //recebe user
+					String id =  (String) inStream.readObject(); //recebe user
 					String passwd = (String)inStream.readObject(); //recebe password
+					String cmd = (String)inStream.readObject(); //recebe o comando
+					
+					String cmdParam = (String)inStream.readObject(); //recebe os parâmetros do comando
+																	 //terá de ser tratado consoante o comando recebido acima
+																	//ex do comando -c: 12 miguel pw123 medico
+					
 					long fileBytes = (long)(inStream.readObject()); //recebe tamanho do ficheiro
 					String fileName = (String)inStream.readObject(); //recebe o nome do ficheiro
+					Integer treatedId = Integer.parseInt(id.trim());
+					String treatedpasswd = passwd.trim();
+					String [] checks = serverOptions.reply(treatedId, treatedpasswd, cmd,cmdParam);
 					
 					//o processo abaixo de gravação do ficheiro poderá ser simplificado
 					byte[] content = (byte[]) inStream.readObject(); //recebe o ficheiro
@@ -88,8 +97,12 @@ public class myDoctorServer {
 					Files.write(fileReceived.toPath(), content); //grava o conteudo do ficheiro "content" para o namespace
 					System.out.println("thread: depois de receber a password e o user");
 					System.out.println("Tamanho do ficheiro recebido: "+ fileBytes + " bytes");
+					System.out.println("User: "+id+" Password: "+passwd+" cmd: "+cmd+" cmdParam: " +cmdParam);
 					
-				}catch (ClassNotFoundException e1) {
+					outStream.writeObject(checks[0]);
+					outStream.writeObject(checks[1]);
+					
+				}catch (Exception e1) {
 					e1.printStackTrace();
 				}
 

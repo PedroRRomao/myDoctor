@@ -23,13 +23,12 @@ public class myDoctor {
 		
 		
 		//Recebe os comandos
-		/*
 		Scanner scan = new Scanner(System.in); 
 		System.out.println("Inserir opcoes na consola:");
-		Map<String, String> option = userOptions.validate(scan.nextLine());
-		*/
-		Map<String, String> param = userOptions.validate("-u miguel -a 12345:123 -p 1234 -md");
+		Map<String, String> param = userOptions.validate(scan.nextLine()); //mapa com os vários comandos e seus argumentos 
+		String lastCommand = userOptions.getLastCommand();				  //indicativo do ultimo comando colocado md, mx etc
 		
+		//"-u 2 -a 127.0.0.1:23456 -p 123 -md abc def"
 		
 		String fileName = "pd.pdf"; //variavél temporária, conteúdo vai ser obtido pelo input do cliente no futuro
 		
@@ -39,17 +38,22 @@ public class myDoctor {
         
 		outStream.writeObject(param.get("u"));
 		outStream.writeObject(param.get("p"));
+		outStream.writeObject(lastCommand);           	//o comando
+		outStream.writeObject(param.get(lastCommand)); //os parametros do comando
         outStream.writeObject(fileBytes);
         outStream.writeObject(fileName);
         outStream.writeObject(content);
-
+        
+        String loginCheck = (String) inStream.readObject();  //String enviada pelo server com resposta ao login
+		System.out.println(loginCheck);
+	    String cmdCheck = (String) inStream.readObject();  //String enviada pelo server com resposta ao comando
+	    System.out.println(cmdCheck);
+	    
 		//Close streams
 		outStream.close();
 		inStream.close();
 		//Close socket
 		echoSocket.close();
 	}
-
-	
 }
 

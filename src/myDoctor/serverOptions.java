@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
@@ -19,23 +20,24 @@ import java.util.TreeMap;
 public class serverOptions {
 	
 	static File f = new File ("serverDirectory/def_not_passwords.txt");
-	static NavigableMap<String, userObject> users = new TreeMap<String, userObject>(); //mapa que contém todos os users formato <username,objecto>
-
+	static NavigableMap<Integer, userObject> users = new TreeMap<Integer, userObject>(); //mapa que contém todos os users formato <username,objecto>
+	
 	
 /**
 * Lê o ficheiro 'f' e popula o Map<String, userObject>users 
 * com username como chave e um objecto userObject como valor
 */
 public static void  populateUserMap() {
-	
     String lineInFile;
     String[] s;
+    int idAux = 0; 
     
 	try (BufferedReader br = new BufferedReader(new FileReader(f))) {
 	    while ((lineInFile = br.readLine()) != null) {
 	    	s = lineInFile.split(";");
-	    	userObject u = new userObject (Integer.parseInt(s[0]),s[1],s[2],s[3]);
-	    	users.put(s[1], u);
+	    	idAux = Integer.parseInt(s[0]);
+	    	userObject u = new userObject (idAux,s[1],s[2],s[3]);
+	    	users.put(idAux, u);
 	    }
 	} catch (FileNotFoundException e) {
 		System.out.println("File not found");
@@ -51,9 +53,9 @@ public static void  populateUserMap() {
 * @param  username
 * @return um objecto com username correspondente ou null caso não exista.
 */
-public static userObject getUser(String username) {
+public static userObject getUser(Integer id) {
 	try {
-		return users.get(username);
+		return users.get(id);
 	}
 	catch(Exception e) {
 		System.out.println("No user found");
@@ -68,7 +70,8 @@ public static userObject getUser(String username) {
 * @param password
 * @param type
 */
-public static void createUser(String username, String password,String type) throws IOException {
+
+public static void createUser(Integer id , String username, String password,String type) throws IOException {
 
 	Set<String> strings = new HashSet<String>();
 	strings.add("utente");
@@ -80,38 +83,60 @@ public static void createUser(String username, String password,String type) thro
 		System.out.println("Invalid user type.\nTypes are : admin, utente, medico ou tecnico");
 	}
 	
-	else if(users.get(username)==null) {
-		 int newId = users.lastEntry().getValue().getId()+2; //vai buscar o ultimo id no ficheiro e incrementa para ser adicionado ao novo user
+	else if(users.get(id) == null) {
 		 String s = ";";
 		 try(BufferedWriter bw = new BufferedWriter(new FileWriter(f,true))){
 				bw.newLine();
-				bw.append( newId +s+ username +s+ password +s+ type); //adiciona o user recem criado no ficheiro
+				bw.append( id +s+ username +s+ password +s+ type); //adiciona o user recem criado no ficheiro
 			}	
-			users.put(username, new userObject(newId,username,password, type)); //adiciona o user recem criado no mapa
+			users.put(id, new userObject(id,username,password, type)); //adiciona o user recem criado no mapa
 			
-			Path path = Paths.get("serverDirectory/"+username);
+			Path path = Paths.get("serverDirectory/"+id);
 			Files.createDirectories(path);
-			System.out.println("User" + username + "created along with directory");
+			System.out.println("User " + id + " "+ username + " created along with directory");
 	}
 	 else {
 		 System.out.println("User already exists");
 	 }
 }
 
- public static void login(String username,String password ) throws Exception {
+ public static String login(Integer id,String password ) throws Exception {
 	 userObject currentUser;
-	 if(users.get(username)==null){
-		 System.out.println("User doesnt exist");
+	 if(users.get(id)==null){
+		 return "User doesnt exist";
 	 }
-	 else if(users.get(username).getPassword().equals(password)) {
-		 currentUser = users.get(username);
-		 System.out.println("Login Sucessfull \nUsername: " + currentUser.getUsername() + "\nClientType: " + currentUser.getType());
+	 else if(users.get(id).getPassword().equals(password)) {
+		 currentUser = users.get(id);
+		 return "Login Sucessfull \nUsername: " + currentUser.getUsername() + "\nClientType: " + currentUser.getType();
 	 }
 	 else {
-		 System.out.println("Invalid password");
+		 return "Invalid password";
 	 }
  }
- public static void teste() {
-	 System.out.println(users.get("Miguel").getPassword());
+ 
+ public static String checkCmd(Integer id,String password,String comand,String args) {
+	//TODO Validação da porcaria toda ou aqui ou em funcoes auxiliares
+	 return "Para já não valida nada"; 
+ }
+ 
+ /**
+ * Itera o mapa users e cria uma string com todos os utilizadores.
+ * @return string que contem todos os utilizadores já fromatada e pronta a imprimir
+ */
+ public static String createMd() {
+	 userObject user;
+	 String output ="";
+	 for (Entry<Integer, userObject> entry : users.entrySet()) {
+		 user = entry.getValue();
+		 output += "Id: " + user.getId() +" Name: "+user.getUsername() +" Type:" + user.getType()+"\n";
+	}
+	return output;
+ }
+ 
+ public static String[] reply(Integer id,String password,String comand,String args) throws Exception {
+	 String[] rply = new String[2];
+	 rply[0]=login(id,password);
+	 rply[1]=checkCmd(id,password,comand,args);
+	 return rply;
  }
 }
